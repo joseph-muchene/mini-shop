@@ -31,26 +31,6 @@ const product3 = {
 // receive data from url
 const urlData = decodeURI(window.location.search).substring(1);
 
-// populate data to product
-if (product1.id == urlData) {
-  price.innerText = product1.price;
-  image.src = product1.img;
-  description.innerText = product1.description;
-  title.innerText = product1.title;
-}
-
-if (product2.id == urlData) {
-  price.innerText = product2.price;
-  image.src = product2.img;
-  description.innerText = product2.description;
-  title.innerText = product2.title;
-}
-if (product3.id == urlData) {
-  price.innerText = product3.price;
-  image.src = product3.img;
-  description.innerText = product3.description;
-  title.innerText = product3.title;
-}
 // Counties available
 const Nairobi = {
   name: "nairobi",
@@ -122,6 +102,29 @@ const zonesData = [
   },
 ];
 
+// populate data to product
+if (product1.id == urlData) {
+  price.innerText = product1.price;
+
+  image.src = product1.img;
+  description.innerText = product1.description;
+  title.innerText = product1.title;
+}
+
+if (product2.id == urlData) {
+  price.innerText = product2.price;
+  image.src = product2.img;
+  description.innerText = product2.description;
+  title.innerText = product2.title;
+}
+if (product3.id == urlData) {
+  price.innerText = product3.price;
+  image.src = product3.img;
+  description.innerText = product3.description;
+  title.innerText = product3.title;
+}
+
+const totalAmount = document.getElementById("total");
 document.getElementById("loc").onchange = function () {
   const value = document.getElementById("loc").value;
 
@@ -134,12 +137,16 @@ document.getElementById("loc").onchange = function () {
     let p;
     x = document.getElementById("op1").value = Nairobi.zones[0];
     document.getElementById("op1").innerText = Nairobi.zones[0];
+
     y = document.getElementById("op2").value = Nairobi.zones[1];
     document.getElementById("op2").innerText = Nairobi.zones[1];
+
     z = document.getElementById("op3").value = Nairobi.zones[2];
     document.getElementById("op3").innerText = Nairobi.zones[2];
+
     p = document.getElementById("op4").value = Nairobi.zones[3];
     document.getElementById("op4").innerText = Nairobi.zones[3];
+
     // populate data
 
     document.getElementById("zones").onchange = function () {
@@ -148,6 +155,12 @@ document.getElementById("loc").onchange = function () {
       if (zneValue) {
         filteredData = zonesData.filter((zone) => zone.name == zneValue);
         const { deliveryDay, deliveryFee } = filteredData[0];
+
+        let amount;
+        amount = parseInt(price.innerText) + deliveryFee;
+
+        totalAmount.innerText = "Total amount is " + amount;
+
         deliveryInfo.innerText =
           "The delivery day for this product will be on " + deliveryDay;
         pickUpInfo.innerText = "product deliver fee is " + deliveryFee;
@@ -160,25 +173,63 @@ document.getElementById("loc").onchange = function () {
     let p;
     x = document.getElementById("op1").value = Kisumu.zones[0];
     document.getElementById("op1").innerText = Kisumu.zones[0];
+
     y = document.getElementById("op2").value = Kisumu.zones[1];
     document.getElementById("op2").innerText = Kisumu.zones[1];
+
     z = document.getElementById("op3").value = Kisumu.zones[2];
     document.getElementById("op3").innerText = Kisumu.zones[2];
+
     p = document.getElementById("op4").value = Kisumu.zones[3];
     document.getElementById("op4").innerText = Kisumu.zones[3];
-
     // check the zone mathes its data
+
     document.getElementById("zones").onchange = function () {
       const zneValue = document.getElementById("zones").value;
       let filteredData;
       if (zneValue) {
         filteredData = zonesData.filter((zone) => zone.name == zneValue);
         const { deliveryDay, deliveryFee } = filteredData[0];
+        let amount;
+        amount = parseInt(price.innerText) + deliveryFee;
+
+        totalAmount.innerText = amount;
         deliveryInfo.innerText =
           "The delivery day for this product will be on " + deliveryDay;
         pickUpInfo.innerText = "product deliver fee is ksh " + deliveryFee;
       }
     };
+
     // populate data
   }
 };
+
+function pay() {
+  // let converted;
+
+  // converted = retrieved / 100;
+  // console.log(converted);
+
+  paypal
+    .Buttons({
+      createOrder: function (data, actions) {
+        // Set up the transaction
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                value: "",
+              },
+            },
+          ],
+        });
+      },
+    })
+    .render("#paypal-button-container");
+}
+
+pay();
+
+// setInterval(() => {
+//   pay();
+// }, 1000);
