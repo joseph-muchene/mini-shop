@@ -239,7 +239,14 @@ function pay(amount) {
           ],
         });
       },
+      onApprove: function () {
+        alert("payment succesfull");
+      },
+      onCancel: function () {
+        alert("payment not succesfull");
+      },
     })
+
     .render("#paypal-button-container");
 }
 
