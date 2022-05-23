@@ -1,4 +1,4 @@
-// product objec
+// product object
 
 const product1 = {
   title: "sneakers",
