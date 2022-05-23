@@ -123,7 +123,9 @@ if (product3.id == urlData) {
   description.innerText = product3.description;
   title.innerText = product3.title;
 }
-
+document.getElementById("paypal-button-container").style.display = "none";
+document.getElementById("checkout").style.display = "none";
+document.getElementById("more-info").style.display = "none";
 const totalAmount = document.getElementById("total");
 document.getElementById("loc").onchange = function () {
   const value = document.getElementById("loc").value;
@@ -150,6 +152,10 @@ document.getElementById("loc").onchange = function () {
     // populate data
 
     document.getElementById("zones").onchange = function () {
+      document.getElementById("paypal-button-container").innerHTML = "";
+      document.getElementById("checkout").style.display = "block";
+      document.getElementById("more-info").style.display = "block";
+      document.getElementById("paypal-button-container").style.display = "none";
       const zneValue = document.getElementById("zones").value;
       let filteredData;
       if (zneValue) {
@@ -159,8 +165,8 @@ document.getElementById("loc").onchange = function () {
         let amount;
         amount = parseInt(price.innerText) + deliveryFee;
 
+        pay(amount);
         totalAmount.innerText = "Total amount is " + amount;
-
         deliveryInfo.innerText =
           "The delivery day for this product will be on " + deliveryDay;
         pickUpInfo.innerText = "product deliver fee is " + deliveryFee;
@@ -185,6 +191,10 @@ document.getElementById("loc").onchange = function () {
     // check the zone mathes its data
 
     document.getElementById("zones").onchange = function () {
+      document.getElementById("paypal-button-container").innerHTML = "";
+      document.getElementById("checkout").style.display = "block";
+      document.getElementById("paypal-button-container").style.display = "none";
+      document.getElementById("more-info").style.display = "block";
       const zneValue = document.getElementById("zones").value;
       let filteredData;
       if (zneValue) {
@@ -192,6 +202,7 @@ document.getElementById("loc").onchange = function () {
         const { deliveryDay, deliveryFee } = filteredData[0];
         let amount;
         amount = parseInt(price.innerText) + deliveryFee;
+        pay(amount);
 
         totalAmount.innerText = amount;
         deliveryInfo.innerText =
@@ -204,11 +215,15 @@ document.getElementById("loc").onchange = function () {
   }
 };
 
-function pay() {
-  // let converted;
+document.getElementById("checkout").onclick = function () {
+  document.getElementById("paypal-button-container").style.display = "block";
+  document.getElementById("checkout").style.display = "none";
+};
 
-  // converted = retrieved / 100;
-  // console.log(converted);
+function pay(amount) {
+  let converted;
+
+  converted = amount / 100;
 
   paypal
     .Buttons({
@@ -218,7 +233,7 @@ function pay() {
           purchase_units: [
             {
               amount: {
-                value: "",
+                value: converted,
               },
             },
           ],
@@ -227,8 +242,6 @@ function pay() {
     })
     .render("#paypal-button-container");
 }
-
-pay();
 
 // setInterval(() => {
 //   pay();
